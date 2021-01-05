@@ -22,17 +22,19 @@ const App = () => {
 ReactDOM.render(<App />, document.getElementById('root'))
 */
 
-const Hello = () => {  
+const Hello = (props) => {  
   return (
       <div>      
-        <p>Hello world</p>    
+        <p>Hello {props.name}, you are {props.age} years old</p>    
       </div>  )}
 const App = () => {
+  const name = "Shelden"
+  const age = 21
   return (
     <div>
       <h1>Greetings</h1>
-      <Hello /> 
-      <Hello />   
+      <Hello name = {name} age = {age}/> 
+      <Hello name = "Kat" age = {17 + 2}/>   
     </div>
   )
 }
