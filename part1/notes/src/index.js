@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState} from 'react'
 import ReactDOM from 'react-dom'
 
 /*
@@ -30,12 +30,28 @@ const App = () => {
   )
 }
 */
-const App = ({counter}) => {
+const App = () => {
+  const [counter, setCounter] = useState(0)
   return (
-    <div>{counter}</div>
+    <div>
+      <div>{counter}</div>
+      <button onClick={() => setCounter(counter + 1)}>
+        plus
+      </button>
+      <button onClick={() => setCounter(0)}>
+        zero
+      </button>
+    </div>
+    
   )
 }
 
+ReactDOM.render(
+  <App />,
+  document.getElementById('root')
+)
+
+/*
 let counter = 1
 
 const refresh = () => {
@@ -46,4 +62,5 @@ setInterval(() => {
   refresh()
   counter += 1
 }, 1000)
+*/
 
