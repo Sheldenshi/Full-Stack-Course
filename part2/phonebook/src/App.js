@@ -14,7 +14,7 @@ const App = () => {
       .then(response => {
         setPersons(response.data)
       })
-  })
+  },[])
   const addNumbers = (event) => {
     event.preventDefault()
     const newPerson = {name: newName,
