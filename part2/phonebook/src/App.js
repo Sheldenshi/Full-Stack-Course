@@ -1,13 +1,34 @@
 import React, { useState, useEffect } from 'react'
 import personService from './services/persons'
 
+
+const NotifyAdd = ({message}) => {
+  const messageStyle = {
+    color: 'green',
+    background: 'lightgrey',
+    fontSize: 20,
+    borderStyle: 'solid',
+    borderRadius: 5,
+    padding: 10,
+    marginBottom: 10
+  }
+  if (message === '') {
+    return null
+  } else {
+    return (
+      <div style={messageStyle}>
+        {message}
+      </div>
+    )
+  }
+}
 const App = () => {
   const [persons, setPersons] = useState([])
 
   const [ newName, setNewName ] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [newFilter, setFilter] = useState('')
-
+  const [addMessage, setAddMessage] = useState('')
   useEffect(() => {
     personService
       .getAll()
@@ -15,18 +36,21 @@ const App = () => {
         setPersons(response)
       })
   },[])
+  
   const addNumbers = (event) => {
     event.preventDefault()
     const newPerson = {name: newName,
                       number: newNumber}
     
     if (!persons.some(p => p.name === newName)) {
+      setAddMessage(`Added ${newPerson.name}`)
       personService
         .create(newPerson)
         .then(response => {
           console.log(response);
           setPersons(persons.concat(response))
         })
+        setTimeout(() => {setAddMessage('')}, 3000)
     } else {
       alert(`${newName} is already added to phonebook`)
     }
@@ -57,6 +81,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <NotifyAdd message={addMessage}/>
       <div>
         filter shown with <input value={newFilter} onChange={event => setFilter(event.target.value)}></input>
       </div>
