@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import axios from 'axios'
+import personService from './services/persons'
 
 const App = () => {
   const [persons, setPersons] = useState([])
@@ -9,10 +9,10 @@ const App = () => {
   const [newFilter, setFilter] = useState('')
 
   useEffect(() => {
-    axios
-      .get('http://localhost:3001/persons')
+    personService
+      .getAll()
       .then(response => {
-        setPersons(response.data)
+        setPersons(response)
       })
   },[])
   const addNumbers = (event) => {
@@ -21,7 +21,12 @@ const App = () => {
                       number: newNumber}
     
     if (!persons.some(p => p.name === newName)) {
-      setPersons(persons.concat(newPerson))
+      personService
+        .create(newPerson)
+        .then(response => {
+          console.log(response);
+          setPersons(persons.concat(response))
+        })
     } else {
       alert(`${newName} is already added to phonebook`)
     }
@@ -33,6 +38,21 @@ const App = () => {
   }
   const handelNumberChange = (event) => {
     setNewNumber(event.target.value)
+  }
+  const handleDelete = (id) => {
+    if (window.confirm(`Delete ${persons.find(p => p.id === id).name}?`)) {
+      personService
+      .deletePerson(id)
+      .then(response => {
+        if (response.status === 200) {
+          personService
+          .getAll()
+          .then(personsAll => {
+            setPersons(personsAll)
+          })
+        }
+      })
+    }
   }
   return (
     <div>
@@ -56,7 +76,10 @@ const App = () => {
       <ul>
       
         {persons.filter(person => person.name.toLowerCase().startsWith(newFilter.toLowerCase())).map((person) =>
-          <li key={person.name}>{person.name} {person.number}</li>
+          <li key={person.name}>
+            {person.name} {person.number} 
+            <button onClick={() => handleDelete(person.id)}>Delete</button>
+            </li>
         )}
       </ul>
       
